@@ -20,8 +20,9 @@
  
 // Setup a oneWire instance to communicate with any OneWire devices 
 // (not just Maxim/Dallas temperature ICs)
-OneWire oneWire(D3);
- 
+OneWire oneWire(D4);
+
+
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
 
@@ -29,21 +30,21 @@ DallasTemperature sensors(&oneWire);
 WiFiManager wifiManager;
 
 //setup urls
-const char* host = "d7.no";
-String url = "/ver/data.php?pass=123";
+const char* host = "api.thingspeak.com";
+String apikey = "GHDP2ARMIAP37BEI";
+String url = "/update.html?key="+apikey+"&field1=";
 String payload ="";
-
-int value = 0; 
 
 void setup(void)
 {
-  // start serial port
   Serial.begin(9600);
-  Serial.println("Dallas Temperature IC Control Library Demo");
+  Serial.println("Get first temperature");
 
   // Start up the library
   sensors.begin();
+  sensors.requestTemperatures(); // Send the command to get temperatures  
 
+  Serial.println("Try to connect to WIFI...");
   wifiManager.autoConnect("Netverdata");
 }
 
@@ -51,21 +52,18 @@ void setup(void)
  
 void loop(void)
 {
-
-
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
  Serial.print(" Requesting temperatures...");
   sensors.requestTemperatures(); // Send the command to get temperatures
-  payload = "&temp="+String(sensors.getTempCByIndex(0),2);
+  payload = String(sensors.getTempCByIndex(0),2);
   
   Serial.println("DONE");
 
   Serial.print("Temperature for Device 1 is: ");
   Serial.print(payload); 
   
- delay(5000);
-  ++value;
+ delay(1000);
  
   Serial.print("connecting to ");
   Serial.println(host);
@@ -96,7 +94,7 @@ void loop(void)
   
   Serial.println();
   Serial.println("closing connection");
- ESP.deepSleep(600000000);
+ ESP.deepSleep(1800000000);
 }
 
 
