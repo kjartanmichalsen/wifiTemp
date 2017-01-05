@@ -20,7 +20,7 @@
  
 // Setup a oneWire instance to communicate with any OneWire devices 
 // (not just Maxim/Dallas temperature ICs)
-OneWire oneWire(D3);
+OneWire oneWire(D4);
  
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
