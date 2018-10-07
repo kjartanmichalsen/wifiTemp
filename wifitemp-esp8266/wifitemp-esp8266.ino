@@ -1,3 +1,5 @@
+// Setup WIFI with 192.168.4.1
+
 #define D0 16
 #define D1 5 // I2C Bus SCL (clock)
 #define D2 4 // I2C Bus SDA (data)
@@ -31,7 +33,7 @@ WiFiManager wifiManager;
 
 //setup urls
 const char* host = "api.thingspeak.com";
-String apikey = "KI2BBEDI5IECNKNV";
+String apikey = "3YZYL9T73PSLXXBA";
 String url = "/update.html?key="+apikey+"&field1=";
 String payload ="";
 
@@ -95,7 +97,7 @@ void loop(void)
   Serial.println();
   Serial.println("closing connection");
  //ESP.deepSleep(1800000000);
- delay(500);
+ delay(300000);
 }
 
 
