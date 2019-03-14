@@ -23,7 +23,8 @@
 // Setup a oneWire instance to communicate with any OneWire devices 
 // (not just Maxim/Dallas temperature ICs)
 // D3 aka GPIO 0 - change for other than NodeMCU 0.9
-OneWire oneWire(D3);
+OneWire oneWire(D5); // esp 201 GPIO14 aka SCK
+
 
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
@@ -33,21 +34,29 @@ WiFiManager wifiManager;
 
 //setup urls
 const char* host = "api.thingspeak.com";
-String apikey = "3YZYL9T73PSLXXBA";
+String apikey = "X8VCD0R63EWKXSQH";
 String url = "/update.html?key="+apikey+"&field1=";
 String payload ="";
 
 void setup(void)
 {
+  Serial.println("Try to connect to WIFI...");
+  wifiManager.autoConnect("temperatureLogger");
+  
   Serial.begin(9600);
   Serial.println("Get first temperature");
 
   // Start up the library
+
+  //Turn on power output
+  pinMode(D6, OUTPUT);
+  digitalWrite(D6, HIGH); // sets the digital ESP 201 aka MISO / GPIO 12
+  delay(1000); 
+
+  // Read sensor
   sensors.begin();
   sensors.requestTemperatures(); // Send the command to get temperatures  
 
-  Serial.println("Try to connect to WIFI...");
-  wifiManager.autoConnect("temperatureLogger");
 }
 
 
@@ -96,8 +105,13 @@ void loop(void)
   
   Serial.println();
   Serial.println("closing connection");
- //ESP.deepSleep(1800000000);
- delay(300000);
+  
+  //Turn off power
+  digitalWrite(D6, LOW); 
+
+  //Sleep
+  //ESP.deepSleep(1800000000);
+  delay(300000);
 }
 
 
