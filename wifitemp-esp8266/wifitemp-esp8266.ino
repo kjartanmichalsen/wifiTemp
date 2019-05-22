@@ -51,10 +51,11 @@ void setup(void)
   //Turn on power output
   pinMode(D6, OUTPUT);
   digitalWrite(D6, HIGH); // sets the digital ESP 201 aka MISO / GPIO 12
-  delay(1000); 
+
 
   // Read sensor
   sensors.begin();
+  delay(1000); 
   sensors.requestTemperatures(); // Send the command to get temperatures  
 
 }
@@ -67,14 +68,21 @@ void loop(void)
   // request to all devices on the bus
  Serial.print(" Requesting temperatures...");
   sensors.requestTemperatures(); // Send the command to get temperatures
+  delay(1000); 
   payload = String(sensors.getTempCByIndex(0),2);
+  
+  if (payload=="-127.00"){
+      Serial.println("error reading, got -127. try again.");
+      sensors.requestTemperatures(); // Send the command to get temperatures
+      delay(3000); 
+      payload = String(sensors.getTempCByIndex(0),2);
+    }
+
   
   Serial.println("DONE");
 
   Serial.print("Temperature for Device 1 is: ");
   Serial.print(payload); 
-  
- delay(1000);
  
   Serial.print("connecting to ");
   Serial.println(host);
@@ -110,8 +118,8 @@ void loop(void)
   digitalWrite(D6, LOW); 
 
   //Sleep
-  //ESP.deepSleep(1800000000);
-  delay(300000);
+  ESP.deepSleep(1800000000);
+  //delay(300000);
 }
 
 
